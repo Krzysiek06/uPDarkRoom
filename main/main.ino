@@ -11,6 +11,7 @@ LiquidCrystal_I2C lcd(0x27,16,2);
 
 uint8_t current_menu = 0;
 uint8_t menu_event = E_IDDLE;
+uint8_t key_lock = 0;
 
 const char START1[] PROGMEM = { "Wci" "\x82" "nij ok" };
 const char START2[] PROGMEM = { "\x83" "eby" " zacz" "\x80" "\x81" };
@@ -24,7 +25,8 @@ typedef struct {
 
 const menu_item menu[] = {
         //  LP UP DN OK PREV
-        { { 0, 0, 0, 1, 0 },      NULL          , START1  , START2  },
+        { { 0, 0, 0, 1, 0 },      NULL          , "111"  , "XYZ" },
+        { { 1, 1, 1, 2, 1 },       NULL          , "abc" , "123" },
             };
             
 void change_menu() {
@@ -43,7 +45,7 @@ void change_menu() {
 
     //wyświetl 2-gą linię
     if (menu[current_menu].second_line) {
-      lcd.setCursor(1, 0);
+      lcd.setCursor(0, 1);
       lcd.print((char*) menu[current_menu].second_line);
     }
 
@@ -57,23 +59,27 @@ void change_menu() {
   }
 }
 
-            void read_key(void) {
-  if (((value > 310) && (value < 350)) && (!key_lock)) {  //wciśnięty S1
+void read_key(void) {
+  if ((digitalRead(8) == LOW)  && (!key_lock)) {  //wciśnięty S1
     menu_event = E_UP;
     key_lock = 1;
-  } else if ((value > 550) && (value < 590) && (!key_lock)) { //wciśnięty S2
+    } 
+  else if ((digitalRead(7) == LOW) && (!key_lock)) { //wciśnięty S2
     menu_event = E_DW;
     key_lock = 1;
-  } else if ((value > 730) && (value < 770) && (!key_lock)) { //wciśnięty S3
+  } 
+  else if ((digitalRead(6) == LOW) && (!key_lock)) { //wciśnięty S3
     menu_event = E_OK;
     key_lock = 1;
-  } else if ((value > 870) && (value < 920) && (!key_lock)) { //naciśnięty S4
-    menu_event = E_PREV;
-    key_lock = 1;
-  } else if (((value > 1000) && key_lock)) { //żaden przycisk nie jest naciśnięty
-    key_lock = 0;
-    menu_event = E_IDDLE;
   }
+  //else if ((value > 870) && (value < 920) && (!key_lock)) { //naciśnięty S4
+    //menu_event = E_PREV;
+    //key_lock = 1;
+  //} 
+  //else if (((value > 1000) && key_lock)) { //żaden przycisk nie jest naciśnięty
+  //  key_lock = 0;
+  //  menu_event = E_IDDLE;
+  //}
 }
 
 void setup() {
@@ -82,6 +88,7 @@ void setup() {
   lcd.backlight();
   lcd.setCursor(0,0);
   lcd.print("DarkRoom!");
+  delay(1000);
 }
 
 void loop() {
