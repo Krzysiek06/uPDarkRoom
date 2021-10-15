@@ -8,7 +8,7 @@ void setup() {
   lcd.init();
   lcd.backlight();
   lcd.setCursor(0,0);
-  lcd.print("Hello, world!");
+  lcd.print("DarkRoom!");
 }
 
 void loop() {
