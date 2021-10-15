@@ -60,41 +60,51 @@ void change_menu() {
 }
 
 void read_key(void) {
-  if ((digitalRead(8) == LOW)  && (!key_lock)) {  //wciśnięty S1
-    menu_event = E_UP;
+  if ((digitalRead(8) == LOW) && (!key_lock)) {  //wciśnięty S1
+    //menu_event = E_UP;
+    //lcd.setCursor(0, 0);
+    lcd.print("1");
     key_lock = 1;
     } 
-  else if ((digitalRead(7) == LOW) && (!key_lock)) { //wciśnięty S2
-    menu_event = E_DW;
+  else if ((digitalRead(7) == LOW) && (!key_lock)){ //wciśnięty S2
+    //menu_event = E_DW;
+    //lcd.setCursor(0, 0);
+    lcd.print("2");
     key_lock = 1;
   } 
   else if ((digitalRead(6) == LOW) && (!key_lock)) { //wciśnięty S3
-    menu_event = E_OK;
+    //menu_event = E_OK;
+    //lcd.setCursor(0, 0);
+    lcd.print("3");
     key_lock = 1;
   }
   //else if ((value > 870) && (value < 920) && (!key_lock)) { //naciśnięty S4
     //menu_event = E_PREV;
     //key_lock = 1;
   //} 
-  //else if (((value > 1000) && key_lock)) { //żaden przycisk nie jest naciśnięty
-  //  key_lock = 0;
-  //  menu_event = E_IDDLE;
-  //}
+  else{ //żaden przycisk nie jest naciśnięty
+    key_lock = 0;
+    //menu_event = E_IDDLE;
+  }
 }
 
 void setup() {
   // put your setup code here, to run once:
   lcd.init();
   lcd.backlight();
+  pinMode(8, INPUT_PULLUP);
+  pinMode(7, INPUT_PULLUP);
+  pinMode(6, INPUT_PULLUP);
   lcd.setCursor(0,0);
   lcd.print("DarkRoom!");
   delay(1000);
+  //read_key();
 }
 
 void loop() {
     read_key();
-    if (menu_event) {
-      change_menu();
-    }
+    //if (menu_event) {
+    //  change_menu();
+    //}
 
 }
